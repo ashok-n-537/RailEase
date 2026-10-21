@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RailEase | Admin Dashboard</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f5f9;
+            color: #182230;
+        }
+        header {
+            background: #142b4a;
+            color: white;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        header h1 { margin: 0; font-size: 24px; }
+        header a { color: white; text-decoration: none; }
+        main { max-width: 1150px; margin: 35px auto; padding: 0 20px; }
+        .welcome { margin-bottom: 25px; }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px #142b4a10;
+        }
+        .card p { color: #64748b; margin: 0 0 12px; }
+        .number { font-size: 34px; font-weight: bold; color: #1769aa; }
+        .section {
+            margin-top: 28px;
+            padding: 22px;
+            background: white;
+            border-radius: 14px;
+            overflow-x: auto;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td {
+            padding: 13px;
+            text-align: left;
+            border-bottom: 1px solid #e8edf3;
+            white-space: nowrap;
+        }
+        th { color: #64748b; font-size: 13px; }
+        .back { display: inline-block; margin-top: 22px; color: #1769aa; }
+        
+        /* RailEase admin dashboard */
+        .admin-hero {
+            padding: 30px;
+            margin-bottom: 24px;
+            border-radius: 16px;
+            color: white;
+            background:
+                linear-gradient(90deg,
+                    rgba(7, 32, 68, .94),
+                    rgba(7, 32, 68, .45)),
+                url("https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=1400&q=80")
+                center / cover no-repeat;
+        }
+
+        .admin-hero h1 {
+            margin-top: 0;
+            font-size: clamp(25px, 4vw, 36px);
+        }
+
+        .admin-hero p {
+            max-width: 600px;
+            line-height: 1.7;
+            color: #e3edff;
+        }
+
+        .admin-stat-card {
+            border: 1px solid #e4eaf3;
+            border-radius: 14px;
+            padding: 22px;
+            background: white;
+            box-shadow: 0 6px 22px rgba(15, 40, 80, .05);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .admin-stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(15, 40, 80, .10);
+        }
+
+        @media (max-width: 650px) {
+            .admin-hero {
+                padding: 23px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>RailEase Admin</h1>
+        <a href="{{ url_for('dashboard') }}">Back to user dashboard →</a>
+    </header>
+
+    <main>
+        
+                <section class="admin-hero">
+                    <h1>RailEase Administration</h1>
+                    <p>
+                        Manage your train services, monitor bookings,
+                        and keep your railway booking platform organized
+                        from one dashboard.
+                    </p>
+                </section>
+
+        
+            <div style="margin: 24px 0;">
+                <a href="{{ url_for('admin_trains') }}"
+                style="
+                    display: inline-block;
+                    background: #2563eb;
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 9px;
+                    text-decoration: none;
+                    font-weight: 600;
+                ">
+                    🚆 Manage Trains
+                </a>
+            </div>
+
+        <div class="welcome">
+            <h2>Admin Dashboard</h2>
+            <p>Manage and monitor your RailEase demo application.</p>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <p>Total registered users</p>
+                <div class="number">{{ total_users }}</div>
+            </div>
+            <div class="card">
+                <p>Total trains</p>
+                <div class="number">{{ total_trains }}</div>
+            </div>
+            <div class="card">
+                <p>Total bookings</p>
+                <div class="number">{{ total_bookings }}</div>
+            </div>
+        </div>
+                <div class="admin-stat-card">
+                    <!-- Keep your existing train statistics here -->
+                </div>
+        <section class="section">
+            <h3>Recent bookings</h3>
+            {% if bookings %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Passenger account</th>
+                        <th>Train</th>
+                        <th>Journey date</th>
+                        <th>Passengers</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.booking_reference }}</td>
+                        <td>{{ booking.user_name }}</td>
+                        <td>{{ booking.train_number }} — {{ booking.train_name }}</td>
+                        <td>{{ booking.journey_date }}</td>
+                        <td>{{ booking.passenger_count }}</td>
+                        <td>{{ booking.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No bookings yet.</p>
+            {% endif %}
+        </section>
+
+        <a class="back" href="{{ url_for('dashboard') }}">
+            ← Return to RailEase
+        </a>
+    </main>
+</body>
+</html>

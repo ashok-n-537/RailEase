@@ -1,0 +1,447 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | RailEase</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy: #142c4e;
+            --blue: #2864e8;
+            --ink: #1b2b42;
+            --muted: #78869a;
+            --border: #e6ebf3;
+            --bg: #f5f7fb;
+            --white: #fff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--bg);
+            font-family: "DM Sans", sans-serif;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        .navbar {
+            min-height: 74px;
+            padding: 0 max(5%, calc((100% - 1180px) / 2));
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            color: var(--navy);
+            font: 800 25px "Manrope", sans-serif;
+            letter-spacing: -1px;
+        }
+
+        .brand span { color: var(--blue); }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #56647a;
+        }
+
+        .nav-links a:hover { color: var(--blue); }
+
+        .logout-form { margin: 0; }
+
+        .logout-button {
+            font: inherit;
+            color: #56647a;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .logout-button:hover { color: #d34242; }
+
+        .container {
+            max-width: 1180px;
+            padding: 0 22px;
+            margin: 36px auto 65px;
+        }
+
+        .welcome {
+            margin-bottom: 27px;
+        }
+
+        .eyebrow {
+            color: var(--blue);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font: 800 clamp(28px, 4vw, 38px) "Manrope", sans-serif;
+            letter-spacing: -1.3px;
+            margin: 8px 0;
+        }
+
+        .welcome p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .hero {
+            min-height: 310px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            isolation: isolate;
+            padding: clamp(25px, 5vw, 52px);
+            color: #fff;
+            border-radius: 23px;
+            background:
+                linear-gradient(90deg, rgba(13, 31, 59, .96) 0%, rgba(13, 31, 59, .78) 48%, rgba(13, 31, 59, .18) 100%),
+                url("https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=1800&q=85") center/cover;
+            box-shadow: 0 17px 40px rgba(20, 44, 78, .14);
+        }
+
+        .hero-content {
+            position: relative;
+            max-width: 560px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 100px;
+            background: rgba(255,255,255,.13);
+            border: 1px solid rgba(255,255,255,.23);
+            color: #e5efff;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 19px;
+        }
+
+        .hero h2 {
+            font: 800 clamp(29px, 4.4vw, 45px) "Manrope", sans-serif;
+            letter-spacing: -1.5px;
+            line-height: 1.18;
+            margin: 0 0 14px;
+        }
+
+        .hero p {
+            color: #dce7f7;
+            font-size: 14px;
+            line-height: 1.8;
+            max-width: 460px;
+            margin: 0 0 25px;
+        }
+
+        .primary-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #fff;
+            color: var(--navy);
+            padding: 14px 20px;
+            border-radius: 11px;
+            font-size: 13px;
+            font-weight: 800;
+            transition: transform .2s, background .2s;
+        }
+
+        .primary-button:hover {
+            background: #eaf1ff;
+            transform: translateY(-2px);
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 15px;
+            margin: 35px 0 18px;
+        }
+
+        .section-heading h2 {
+            font: 800 21px "Manrope", sans-serif;
+            letter-spacing: -.5px;
+            margin: 0 0 5px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .quick-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            padding: 23px;
+            min-width: 0;
+            transition: transform .2s, box-shadow .2s, border-color .2s;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-4px);
+            border-color: #cbd8f4;
+            box-shadow: 0 12px 27px rgba(24, 49, 89, .07);
+        }
+
+        .card-icon {
+            height: 49px;
+            width: 49px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: #edf3ff;
+            color: var(--blue);
+            font-size: 23px;
+            margin-bottom: 19px;
+        }
+
+        .quick-card:nth-child(2) .card-icon {
+            background: #e8f8f0;
+            color: #16865c;
+        }
+
+        .quick-card:nth-child(3) .card-icon {
+            background: #f2edff;
+            color: #8058ce;
+        }
+
+        .quick-card h3 {
+            font: 800 16px "Manrope", sans-serif;
+            margin: 0 0 9px;
+        }
+
+        .quick-card p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            min-height: 44px;
+            margin: 0 0 17px;
+        }
+
+        .card-link {
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .card-link span {
+            display: inline-block;
+            transition: transform .2s;
+        }
+
+        .card-link:hover span { transform: translateX(4px); }
+
+        .feature-strip {
+            margin-top: 24px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+            padding: 21px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .feature-copy {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .feature-symbol {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: #fff3df;
+            font-size: 21px;
+            flex-shrink: 0;
+        }
+
+        .feature-copy h3 {
+            font: 800 14px "Manrope", sans-serif;
+            margin: 0 0 5px;
+        }
+
+        .feature-copy p {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .secondary-button {
+            white-space: nowrap;
+            padding: 11px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            color: var(--navy);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .secondary-button:hover {
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px 15px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        @media (max-width: 760px) {
+            .navbar { padding: 17px 22px; }
+            .nav-links { gap: 14px; }
+            .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .quick-card:last-child { grid-column: 1 / -1; }
+            .hero { min-height: 290px; }
+        }
+
+        @media (max-width: 500px) {
+            .navbar { align-items: flex-start; }
+            .brand { font-size: 22px; }
+            .nav-links { flex-wrap: wrap; justify-content: end; gap: 10px 13px; font-size: 11px; }
+            .container { padding: 0 14px; margin-top: 25px; }
+            .hero { padding: 25px 20px; border-radius: 17px; }
+            .hero h2 { font-size: 29px; }
+            .hero p { font-size: 13px; }
+            .quick-grid { grid-template-columns: 1fr; }
+            .quick-card:last-child { grid-column: auto; }
+            .quick-card p { min-height: 0; }
+            .section-heading { align-items: flex-start; }
+            .feature-strip { align-items: flex-start; flex-direction: column; padding: 19px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a class="brand" href="{{ url_for('home') }}">Rail<span>Ease</span></a>
+
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('my_bookings') }}">My Bookings</a>
+            <a href="{{ url_for('search_history') }}">History</a>
+
+            <form class="logout-form" method="POST" action="{{ url_for('logout') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="logout-button" type="submit">Logout ↗</button>
+            </form>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header class="welcome">
+            <div class="eyebrow">Your travel space</div>
+            <h1>Welcome back, {{ user.name }} 👋</h1>
+            <p>Your next journey is just a few clicks away. Where would you like to go?</p>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">🚆 &nbsp; YOUR JOURNEY STARTS HERE</div>
+                <h2>Discover new places.<br>Enjoy the journey.</h2>
+                <p>
+                    Find your train, choose your travel date, and manage your bookings
+                    in one simple place with RailEase.
+                </p>
+                <a class="primary-button" href="{{ url_for('search_trains') }}">
+                    Search trains <span>→</span>
+                </a>
+            </div>
+        </section>
+
+        <div class="section-heading">
+            <div>
+                <h2>Your travel shortcuts</h2>
+                <p>Everything you need for your next trip.</p>
+            </div>
+        </div>
+
+        <section class="quick-grid">
+            <a class="quick-card" href="{{ url_for('search_trains') }}">
+                <div class="card-icon">⌕</div>
+                <h3>Find your train</h3>
+                <p>Search available trains by source, destination, and journey date.</p>
+                <span class="card-link">Start searching <span>→</span></span>
+            </a>
+
+            <a class="quick-card" href="{{ url_for('my_bookings') }}">
+                <div class="card-icon">▣</div>
+                <h3>My bookings</h3>
+                <p>Review your bookings, check their status, or access your demo tickets.</p>
+                <span class="card-link">View bookings <span>→</span></span>
+            </a>
+
+            <a class="quick-card" href="{{ url_for('search_history') }}">
+                <div class="card-icon">◷</div>
+                <h3>Search history</h3>
+                <p>Revisit routes you searched for previously and plan your next trip.</p>
+                <span class="card-link">View history <span>→</span></span>
+            </a>
+        </section>
+
+        <section class="feature-strip">
+            <div class="feature-copy">
+                <div class="feature-symbol">💡</div>
+                <div>
+                    <h3>A little trip planning goes a long way</h3>
+                    <p>Double-check your journey date and passenger details before confirming a booking.</p>
+                </div>
+            </div>
+
+            <a class="secondary-button" href="{{ url_for('search_trains') }}">
+                Plan a journey →
+            </a>
+        </section>
+    </main>
+
+    <footer class="footer">
+        © 2026 RailEase · Your journey, made simpler.
+    </footer>
+</body>
+</html>
+```

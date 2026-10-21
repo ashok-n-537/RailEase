@@ -1,0 +1,800 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Journey | RailEase</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --navy: #142c4e;
+            --blue: #2864e8;
+            --blue-light: #eef4ff;
+            --ink: #192a41;
+            --muted: #758197;
+            --border: #e5eaf2;
+            --background: #f5f7fb;
+            --white: #ffffff;
+            --green: #13845b;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--ink);
+            font-family: "DM Sans", sans-serif;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .navbar {
+            height: 76px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 max(5%, calc((100% - 1180px) / 2));
+        }
+
+        .brand {
+            font: 800 25px "Manrope", sans-serif;
+            letter-spacing: -1px;
+            color: var(--navy);
+        }
+
+        .brand span { color: var(--blue); }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #53627a;
+        }
+
+        .nav-links a:hover { color: var(--blue); }
+
+        .page {
+            max-width: 1120px;
+            margin: 38px auto 70px;
+            padding: 0 22px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #65738a;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .back-link:hover { color: var(--blue); }
+
+        .page-heading { margin-bottom: 25px; }
+
+        .eyebrow {
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+
+        h1, h2, h3, p { margin-top: 0; }
+
+        h1 {
+            font: 800 clamp(27px, 4vw, 36px) "Manrope", sans-serif;
+            letter-spacing: -1.3px;
+            margin: 9px 0;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        .journey-card {
+            position: relative;
+            overflow: hidden;
+            color: white;
+            border-radius: 22px;
+            padding: 30px;
+            margin-bottom: 30px;
+            background:
+                linear-gradient(105deg, rgba(13, 31, 59, .98), rgba(26, 66, 121, .91)),
+                url("https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=1600&q=85") center/cover;
+            box-shadow: 0 15px 38px rgba(24, 48, 86, .13);
+        }
+
+        .journey-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .train-label {
+            color: #c4d6f4;
+            font-size: 13px;
+            margin-bottom: 7px;
+        }
+
+        .train-name {
+            font: 800 clamp(20px, 3vw, 27px) "Manrope", sans-serif;
+            margin-bottom: 6px;
+        }
+
+        .train-number {
+            font-size: 13px;
+            color: #c9d8ee;
+        }
+
+        .date-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.2);
+            padding: 11px 15px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .route {
+            display: grid;
+            grid-template-columns: 1fr minmax(100px, 1.1fr) 1fr;
+            align-items: center;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .station:last-child { text-align: right; }
+
+        .station-time {
+            font: 800 clamp(23px, 4vw, 32px) "Manrope", sans-serif;
+            margin-bottom: 7px;
+        }
+
+        .station-name {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .station-caption {
+            font-size: 12px;
+            color: #c1d1e8;
+        }
+
+        .route-line { text-align: center; }
+
+        .route-line .duration {
+            color: #d3e1f6;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .line {
+            height: 2px;
+            background: rgba(255,255,255,.38);
+            position: relative;
+        }
+
+        .line::before, .line::after {
+            content: "";
+            position: absolute;
+            top: -4px;
+            width: 10px;
+            height: 10px;
+            border: 2px solid #b9d3ff;
+            border-radius: 50%;
+            background: #193d70;
+        }
+
+        .line::before { left: 0; }
+        .line::after { right: 0; }
+
+        .booking-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.65fr) minmax(260px, .8fr);
+            gap: 25px;
+            align-items: start;
+        }
+
+        .panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 19px;
+            padding: 27px;
+            box-shadow: 0 5px 20px rgba(25, 42, 65, .025);
+        }
+
+        .section-title {
+            font: 800 20px "Manrope", sans-serif;
+            letter-spacing: -.4px;
+            margin-bottom: 7px;
+        }
+
+        .section-description {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .class-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .class-option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border: 1.5px solid var(--border);
+            padding: 17px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .class-option:hover {
+            border-color: #a9c2fb;
+            background: #fbfcff;
+        }
+
+        .class-option:has(input:checked) {
+            border-color: var(--blue);
+            background: var(--blue-light);
+            box-shadow: 0 0 0 2px rgba(40,100,232,.06);
+        }
+
+        .class-option input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--blue);
+            flex-shrink: 0;
+        }
+
+        .class-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            background: #e9efff;
+            display: grid;
+            place-items: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .class-details { flex: 1; }
+
+        .class-name {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .class-code {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .class-tag {
+            font-size: 11px;
+            font-weight: 800;
+            color: #5269a4;
+            background: #e6edff;
+            border-radius: 7px;
+            padding: 6px 8px;
+            white-space: nowrap;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 27px 0;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 9px;
+        }
+
+        .select-wrap { position: relative; }
+
+        select, .passenger-input {
+            width: 100%;
+            min-height: 48px;
+            border: 1px solid #dce3ed;
+            border-radius: 11px;
+            background: white;
+            padding: 12px 14px;
+            font: 500 14px "DM Sans", sans-serif;
+            color: var(--ink);
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        select:focus, .passenger-input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(40,100,232,.1);
+        }
+
+        .passenger-list {
+            display: grid;
+            gap: 13px;
+            margin-top: 19px;
+        }
+
+        .passenger-row {
+            display: grid;
+            grid-template-columns: 42px 1fr;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .passenger-number {
+            height: 42px;
+            width: 42px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: #f0f4fb;
+            color: #52637d;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .passenger-input { min-width: 0; }
+
+        .form-error {
+            color: #c0392b;
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .summary-panel {
+            position: sticky;
+            top: 22px;
+        }
+
+        .summary-heading {
+            font: 800 19px "Manrope", sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            font-size: 13px;
+            margin: 16px 0;
+        }
+
+        .summary-row span:first-child { color: var(--muted); }
+
+        .summary-row strong {
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .summary-total {
+            border-top: 1px dashed #d7dfeb;
+            padding-top: 18px;
+            margin-top: 21px;
+        }
+
+        .summary-total span:first-child {
+            color: var(--ink);
+            font-weight: 800;
+        }
+
+        .demo-note {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #66758a;
+            background: #f4f7fc;
+            border-radius: 11px;
+            padding: 13px;
+            margin: 20px 0;
+        }
+
+        .book-button {
+            width: 100%;
+            border: 0;
+            border-radius: 12px;
+            padding: 15px 18px;
+            color: white;
+            background: var(--blue);
+            font: 800 14px "DM Sans", sans-serif;
+            cursor: pointer;
+            transition: .2s;
+            box-shadow: 0 8px 18px rgba(40,100,232,.2);
+        }
+
+        .book-button:hover {
+            background: #174fca;
+            transform: translateY(-1px);
+        }
+
+        .secure-note {
+            color: var(--muted);
+            text-align: center;
+            font-size: 11px;
+            margin: 13px 0 0;
+        }
+
+        .flash-messages { margin-bottom: 20px; }
+
+        .flash {
+            border-radius: 10px;
+            padding: 13px 15px;
+            margin-bottom: 9px;
+            font-size: 13px;
+            background: #fff1f0;
+            color: #a52d25;
+            border: 1px solid #ffd7d4;
+        }
+
+        .flash.success {
+            background: #eaf8f0;
+            color: #176b45;
+            border-color: #c7ecd7;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            padding: 25px 15px;
+        }
+
+        @media (max-width: 800px) {
+            .booking-layout { grid-template-columns: 1fr; }
+            .summary-panel { position: static; }
+            .navbar { padding: 0 22px; }
+            .page { margin-top: 26px; }
+        }
+
+        @media (max-width: 520px) {
+            .navbar { height: 65px; }
+            .brand { font-size: 22px; }
+            .nav-links { gap: 13px; font-size: 12px; }
+            .nav-links .hide-mobile { display: none; }
+            .page { padding: 0 14px; }
+            .journey-card { padding: 22px 18px; border-radius: 17px; }
+            .route { gap: 9px; grid-template-columns: 1fr 70px 1fr; }
+            .station-time { font-size: 22px; }
+            .station-name { font-size: 12px; overflow-wrap: anywhere; }
+            .station-caption { font-size: 10px; }
+            .panel { padding: 21px 17px; }
+            .class-option { padding: 13px 10px; gap: 9px; }
+            .class-icon { width: 39px; height: 39px; font-size: 19px; }
+            .class-name { font-size: 13px; }
+            .class-tag { font-size: 10px; padding: 5px; }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        
+        <a class="brand" href="{{ url_for('dashboard') }}">Rail<span>Ease</span></a>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a class="hide-mobile" href="{{ url_for('my_bookings') }}">My Bookings</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <main class="page">
+        <a class="back-link"
+           href="{{ url_for('train_details', train_number=train.train_number, date=journey_date) }}">
+            ← Back to train details
+        </a>
+
+        <header class="page-heading">
+            <div class="eyebrow">Your next adventure</div>
+            <h1>Book your journey</h1>
+            <p class="subtitle">Choose your travel class and add your passenger details.</p>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ 'success' if category == 'success' else '' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <section class="journey-card">
+            <div class="journey-top">
+                <div>
+                    <div class="train-label">YOUR SELECTED TRAIN</div>
+                    <div class="train-name">{{ train.name }}</div>
+                    <div class="train-number">Train No. {{ train.train_number }}</div>
+                </div>
+
+                <div class="date-pill">
+                    <span>▦</span>
+                    <span id="journey-date-label">{{ journey_date }}</span>
+                </div>
+            </div>
+
+            <div class="route">
+                <div class="station">
+                    <div class="station-time">{{ train.departure_time }}</div>
+                    <div class="station-name">{{ train.source }}</div>
+                    <div class="station-caption">Departure</div>
+                </div>
+
+                <div class="route-line">
+                    <div class="duration">Your journey</div>
+                    <div class="line"></div>
+                </div>
+
+                <div class="station">
+                    <div class="station-time">{{ train.arrival_time }}</div>
+                    <div class="station-name">{{ train.destination }}</div>
+                    <div class="station-caption">Arrival</div>
+                </div>
+            </div>
+        </section>
+
+        <form id="booking-form"
+              method="POST"
+              action="{{ url_for('book_ticket', train_number=train.train_number, date=journey_date) }}">
+
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="booking-layout">
+                <section class="panel">
+                    <h2 class="section-title">Choose your class</h2>
+                    <p class="section-description">
+                        Select the comfort level that suits your journey.
+                    </p>
+
+                    <div class="class-list">
+                        {% for code, class_name in classes.items() %}
+                            <label class="class-option">
+                                <input
+                                    type="radio"
+                                    name="class_code"
+                                    value="{{ code }}"
+                                    {% if loop.first %}checked{% endif %}
+                                    required
+                                >
+
+                                <span class="class-icon">
+                                    {% if code == 'SL' %}🛏️
+                                    {% elif code == '3A' %}❄️
+                                    {% else %}✨
+                                    {% endif %}
+                                </span>
+
+                                <span class="class-details">
+                                    <span class="class-name">{{ class_name }}</span>
+                                    <span class="class-code">
+                                        {% if code == 'SL' %}
+                                            SL · Sleeper class
+                                        {% elif code == '3A' %}
+                                            3A · Air-conditioned
+                                        {% else %}
+                                            2A · Premium air-conditioned
+                                        {% endif %}
+                                    </span>
+                                </span>
+
+                                <span class="class-tag">{{ code }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <h2 class="section-title">Passenger details</h2>
+                    <p class="section-description">
+                        Enter the name of every passenger travelling on this booking.
+                    </p>
+
+                    <label class="field-label" for="passenger-count">
+                        Number of passengers
+                    </label>
+
+                    <div class="select-wrap">
+                        <select id="passenger-count" name="passenger-count">
+                            {% for count in range(1, 7) %}
+                                <option value="{{ count }}"
+                                    {% if count == 1 %}selected{% endif %}>
+                                    {{ count }} passenger{% if count != 1 %}s{% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div id="passenger-list" class="passenger-list">
+                        <div class="passenger-row">
+                            <div class="passenger-number">01</div>
+                            <input
+                                class="passenger-input"
+                                type="text"
+                                name="passenger_names"
+                                placeholder="Enter passenger 1 full name"
+                                maxlength="100"
+                                autocomplete="name"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div id="form-error" class="form-error">
+                        Please enter a name for every passenger.
+                    </div>
+                </section>
+
+                <aside class="panel summary-panel">
+                    <h2 class="summary-heading">Booking summary</h2>
+
+                    <div class="summary-row">
+                        <span>Train</span>
+                        <strong>{{ train.train_number }}</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>From</span>
+                        <strong>{{ train.source }}</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>To</span>
+                        <strong>{{ train.destination }}</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Journey date</span>
+                        <strong>{{ journey_date }}</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Travel class</span>
+                        <strong id="summary-class">Sleeper</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Passengers</span>
+                        <strong id="summary-passengers">1</strong>
+                    </div>
+
+                    <div class="summary-row summary-total">
+                        <span>Total passengers</span>
+                        <strong id="summary-total">1</strong>
+                    </div>
+
+                    <div class="demo-note">
+                        <strong>Before you continue</strong><br>
+                        Check your journey details and passenger names carefully.
+                        This demo does not process payments or connect to live railway reservations.
+                    </div>
+
+                    <button type="submit" class="book-button">
+                        Confirm booking →
+                    </button>
+
+                    <p class="secure-note">Your booking will be saved in RailEase.</p>
+                </aside>
+            </div>
+        </form>
+    </main>
+
+    <footer class="footer">
+        © 2026 RailEase · Your journey, made simpler.
+    </footer>
+
+    <script>
+        const passengerCount = document.getElementById("passenger-count");
+        const passengerList = document.getElementById("passenger-list");
+        const summaryPassengers = document.getElementById("summary-passengers");
+        const summaryTotal = document.getElementById("summary-total");
+        const summaryClass = document.getElementById("summary-class");
+        const bookingForm = document.getElementById("booking-form");
+        const formError = document.getElementById("form-error");
+
+        function renderPassengers() {
+            const count = Number(passengerCount.value);
+            const previousInputs = [
+                ...passengerList.querySelectorAll('input[name="passenger_names"]')
+            ];
+            const previousNames = previousInputs.map(input => input.value);
+
+            passengerList.innerHTML = "";
+
+            for (let i = 0; i < count; i++) {
+                const row = document.createElement("div");
+                row.className = "passenger-row";
+
+                const number = document.createElement("div");
+                number.className = "passenger-number";
+                number.textContent = String(i + 1).padStart(2, "0");
+
+                const input = document.createElement("input");
+                input.className = "passenger-input";
+                input.type = "text";
+                input.name = "passenger_names";
+                input.placeholder = `Enter passenger ${i + 1} full name`;
+                input.maxLength = 100;
+                input.required = true;
+                input.autocomplete = i === 0 ? "name" : "off";
+                input.value = previousNames[i] || "";
+
+                row.appendChild(number);
+                row.appendChild(input);
+                passengerList.appendChild(row);
+            }
+
+            summaryPassengers.textContent = count;
+            summaryTotal.textContent = count;
+            formError.style.display = "none";
+        }
+
+        passengerCount.addEventListener("change", renderPassengers);
+
+        document.querySelectorAll('input[name="class_code"]').forEach(radio => {
+            radio.addEventListener("change", () => {
+                const selected = document.querySelector(
+                    'input[name="class_code"]:checked'
+                );
+
+                if (selected) {
+                    const names = {
+                        "SL": "Sleeper",
+                        "3A": "AC 3 Tier",
+                        "2A": "AC 2 Tier"
+                    };
+
+                    summaryClass.textContent = names[selected.value];
+                }
+            });
+        });
+
+        bookingForm.addEventListener("submit", event => {
+            const inputs = [
+                ...passengerList.querySelectorAll('input[name="passenger_names"]')
+            ];
+
+            const invalid = inputs.some(input => !input.value.trim());
+
+            if (invalid) {
+                event.preventDefault();
+                formError.style.display = "block";
+                inputs.find(input => !input.value.trim())?.focus();
+            }
+        });
+
+        renderPassengers();
+    </script>
+</body>
+</html>
+```

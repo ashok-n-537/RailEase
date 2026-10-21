@@ -1,0 +1,63 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Booking Confirmed | RailEase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            padding: 30px 16px;
+            color: #1f2937;
+        }
+
+        main {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+        }
+
+        .reference {
+            padding: 16px;
+            background: #ecfdf5;
+            border-radius: 8px;
+            color: #166534;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Demo Booking Confirmed!</h1>
+
+    <p class="reference">
+        Booking reference: {{ booking_reference }}
+    </p>
+
+    <h2>{{ train["name"] }}</h2>
+
+    <p>Train number: {{ train["train_number"] }}</p>
+    <p>Route: {{ train["source"] }} → {{ train["destination"] }}</p>
+    <p>Journey date: {{ journey_date }}</p>
+    <p>Class: {{ class_name }}</p>
+
+    <h3>Passengers</h3>
+    <ul>
+        {% for name in passenger_names %}
+            <li>{{ name }}</li>
+        {% endfor %}
+    </ul>
+
+    <p>This is a demo booking, not a valid railway ticket.</p>
+
+    <p><a href="{{ url_for('dashboard') }}">Back to dashboard</a></p>
+    <p><a href="{{ url_for('search_trains') }}">Search more trains</a></p>
+</main>
+</body>
+</html>
+```

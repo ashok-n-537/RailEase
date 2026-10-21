@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Search History | RailEase</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #172554;
+        }
+        nav {
+            background: #123b72;
+            color: white;
+            padding: 20px 8%;
+        }
+        nav a { color: white; }
+        main { max-width: 850px; margin: 35px auto; padding: 20px; }
+        article {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px #1725540a;
+        }
+        .route { font-size: 18px; font-weight: bold; }
+        small { color: #64748b; }
+        .empty {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        🚆 RailEase |
+        <a href="{{ url_for('dashboard') }}">Dashboard</a> |
+        <a href="{{ url_for('search_trains') }}">Search trains</a>
+    </nav>
+
+    <main>
+        <h1>My Search History</h1>
+        <p>Review the train routes you've searched for previously.</p>
+
+        {% if searches %}
+            {% for search in searches %}
+                <article>
+                    <p class="route">
+                        {{ search["source"] }} → {{ search["destination"] }}
+                    </p>
+                    <p>Journey date: {{ search["journey_date"] }}</p>
+                    <small>Search saved at: {{ search["searched_at"] }} (UTC)</small>
+                </article>
+            {% endfor %}
+        {% else %}
+            <div class="empty">
+                <h3>No searches yet</h3>
+                <p>Your searches will appear here after you search for a train.</p>
+                <a href="{{ url_for('search_trains') }}">Search for a train</a>
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>

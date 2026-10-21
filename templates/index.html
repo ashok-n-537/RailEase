@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailEase - Train Booking</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        nav {
+            background: #123b72;
+            color: white;
+            padding: 20px 8%;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 700px;
+            margin: 80px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        p {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        a {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 22px;
+            background: #1769e0;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+        
+        /* RailEase homepage visual upgrade */
+        .rail-hero {
+            position: relative;
+            overflow: hidden;
+            min-height: 390px;
+            padding: 65px 35px 90px;
+            border-radius: 18px;
+            color: white;
+            background:
+                linear-gradient(90deg,
+                    rgba(5, 28, 62, 0.92),
+                    rgba(5, 28, 62, 0.40)),
+                url("https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=1800&q=85")
+                center 55% / cover no-repeat;
+        }
+
+        .rail-hero h1 {
+            max-width: 600px;
+            font-size: clamp(32px, 5vw, 54px);
+            line-height: 1.12;
+            margin: 0 0 18px;
+        }
+
+        .rail-hero p {
+            max-width: 480px;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .rail-hero .hero-tag {
+            display: inline-block;
+            padding: 8px 13px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,.45);
+            border-radius: 30px;
+            background: rgba(255,255,255,.12);
+            font-size: 13px;
+        }
+
+        .rail-features {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin: 26px 0;
+        }
+
+        .rail-feature {
+            padding: 22px;
+            border: 1px solid #e4eaf3;
+            border-radius: 14px;
+            background: white;
+            box-shadow: 0 6px 22px rgba(15, 40, 80, .05);
+        }
+
+        .rail-feature .feature-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .rail-feature h3 {
+            margin: 0 0 8px;
+            color: #15345e;
+        }
+
+        .rail-feature p {
+            margin: 0;
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        @media (max-width: 650px) {
+            .rail-hero {
+                min-height: 320px;
+                padding: 42px 22px 55px;
+                border-radius: 12px;
+            }
+
+            .rail-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <nav>🚆 RailEase    by ashok</nav>
+
+    <main>
+        <h1>Your Journey Starts Here</h1>
+        <p>
+            Search trains, manage your bookings, and
+            track your journeys in one place.
+        </p>
+        
+            <section class="rail-hero">
+                <span class="hero-tag">🚆 Your journey starts here</span>
+
+                <h1>Every Journey Begins With RailEase.</h1>
+
+                <p>
+                    Discover your next destination, explore available trains,
+                    and plan your journey with a simpler booking experience.
+                </p>
+            </section>
+
+            <section class="rail-features">
+                <article class="rail-feature">
+                    <div class="feature-icon">🎫</div>
+                    <h3>Easy Booking</h3>
+                    <p>Find trains and manage your bookings in one place.</p>
+                </article>
+
+                <article class="rail-feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Your Account, Your Trips</h3>
+                    <p>Access your own booking history and journey details.</p>
+                </article>
+
+                <article class="rail-feature">
+                    <div class="feature-icon">🛤️</div>
+                    <h3>Explore Destinations</h3>
+                    <p>Find routes and discover your next railway journey.</p>
+                </article>
+            </section>
+
+        <a href="/register">Create Account</a>
+        <a href="/login">Login</a>
+    </main>
+</body>
+</html>

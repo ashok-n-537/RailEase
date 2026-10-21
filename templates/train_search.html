@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search Trains | RailEase</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #172554;
+        }
+        nav {
+            background: #123b72;
+            color: white;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        nav a { color: white; text-decoration: none; }
+        main { max-width: 950px; margin: 35px auto; padding: 20px; }
+        .panel, .train {
+            background: white;
+            padding: 24px;
+            margin-bottom: 20px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px #1725540a;
+        }
+        .fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+        label { display: block; font-weight: bold; }
+        input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 13px 22px;
+            border: none;
+            border-radius: 8px;
+            background: #1769e0;
+            color: white;
+            cursor: pointer;
+        }
+        .times {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .message { padding: 12px; border-radius: 8px; background: #dbeafe; }
+        .error { background: #fee2e2; }
+        .success { background: #dcfce7; }
+        small { color: #64748b; }
+        @media (max-width: 500px) {
+            main { padding: 12px; }
+            .panel, .train { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <strong>🚆 RailEase</strong>
+        <div>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a> |
+            <a href="{{ url_for('search_history') }}">My Searches</a>
+        </div>
+    </nav>
+
+    <main>
+        <h1>Find your train</h1>
+        <p>Search routes and explore available demo train results.</p>
+
+        <section class="panel">
+            <form method="POST" action="{{ url_for('search_trains') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="fields">
+                    <div>
+                        <label for="source">From station</label>
+                        <input id="source" name="source"
+                               value="{{ source }}" maxlength="100"
+                               placeholder="e.g. Durgapur" required>
+                    </div>
+                    <div>
+                        <label for="destination">To station</label>
+                        <input id="destination" name="destination"
+                               value="{{ destination }}" maxlength="100"
+                               placeholder="e.g. Howrah" required>
+                    </div>
+                    <div>
+                        <label for="journey_date">Journey date</label>
+                        <input id="journey_date" name="journey_date"
+                               type="date" min="{{ today }}"
+                               value="{{ journey_date }}" required>
+                    </div>
+                    
+
+                </div>
+
+                <button type="submit">Search Trains</button>
+            </form>
+        </section>
+
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <p class="message {{ category }}">{{ message }}</p>
+        {% endfor %}
+
+        {% if searched %}
+            <h2>Search results</h2>
+            <p>
+                {{ source }} → {{ destination }}
+                | Journey date: {{ journey_date }}
+            </p>
+
+            {% if results %}
+                {% for train in results %}
+                 <a href="{{ url_for('train_details',train_number=train['train_number'],date=journey_date) }}"> Check seat availability →
+</a>
+                    <article class="train">
+                        <h3>{{ train["name"] }}</h3>
+                        <small>Train number: {{ train["train_number"] }}</small>
+
+                        <div class="times">
+                            <div>
+                                <h3>{{ train["departure_time"] }}</h3>
+                                <p>{{ train["source"] }}</p>
+                            </div>
+                            <div>
+                                <h3>{{ train["arrival_time"] }}</h3>
+                                <p>{{ train["destination"] }}</p>
+                            </div>
+                        </div>
+
+                        <small>
+                            Demo schedule only. Live availability and
+                            ticket booking are not yet connected.
+                        </small>
+                    </article>
+                {% endfor %}
+            {% else %}
+                <p>No matching demo trains were found for this route.</p>
+            {% endif %}
+        {% endif %}
+    </main>
+</body>
+</html>

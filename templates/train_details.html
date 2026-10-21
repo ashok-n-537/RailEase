@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Train Details | RailEase</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #172554;
+        }
+        nav {
+            background: #123b72;
+            color: white;
+            padding: 20px 8%;
+        }
+        nav a { color: white; }
+        main {
+            max-width: 850px;
+            margin: 35px auto;
+            padding: 20px;
+        }
+        .card {
+            background: white;
+            padding: 24px;
+            margin: 16px 0;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px #1725540a;
+        }
+        .route {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .class-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            border-top: 1px solid #e2e8f0;
+            padding: 16px 0;
+        }
+        .available {
+            color: #047857;
+            font-weight: bold;
+        }
+        .limited {
+            color: #b45309;
+            font-weight: bold;
+        }
+        .unavailable {
+            color: #b91c1c;
+            font-weight: bold;
+        }
+        small { color: #64748b; }
+    </style>
+</head>
+<body>
+    <nav>
+        🚆 RailEase |
+        <a href="{{ url_for('search_trains') }}">Search trains</a> |
+        <a href="{{ url_for('search_history') }}">My Searches</a>
+    </nav>
+
+    <main>
+        <h1>{{ train["name"] }}</h1>
+        <p>Train number: {{ train["train_number"] }}</p>
+        <p>Journey date: {{ journey_date }}</p>
+
+        <section class="card">
+            <div class="route">
+                <div>
+                    <h2>{{ train["departure_time"] }}</h2>
+                    <p>{{ train["source"] }}</p>
+                </div>
+                <div>
+                    <h2>{{ train["arrival_time"] }}</h2>
+                    <p>{{ train["destination"] }}</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Seat availability</h2>
+            <p>Select a class for your journey.</p>
+
+            {% for item in availability %}
+                <div class="class-row">
+                    <div>
+                        {% if item["class_code"] == "SL" %}
+                            <strong>Sleeper (SL)</strong>
+                        {% elif item["class_code"] == "3A" %}
+                            <strong>AC 3 Tier (3A)</strong>
+                        {% elif item["class_code"] == "2A" %}
+                            <strong>AC 2 Tier (2A)</strong>
+                        {% endif %}
+                        <br>
+                        <small>
+                            {{ item["total_seats"] }} demo seats in total
+                        </small>
+                    </div>
+
+                    <div>
+                        {% if item["available_seats"] == 0 %}
+                            <span class="unavailable">No seats available</span>
+                        {% elif item["available_seats"] <= 5 %}
+                            <span class="limited">
+                                {{ item["available_seats"] }} demo seats left
+                            </span>
+                        {% else %}
+                            <span class="available">
+                                {{ item["available_seats"] }} demo seats available
+                            </span>
+                            
+                        {% endif %}
+                        <a href="{{ url_for('book_ticket',train_number=train['train_number'],date=journey_date) }}">Book this train →</a>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <small>
+                Demo inventory only. These figures are not live railway
+                availability and do not guarantee a real ticket.
+            </small>
+        </section>
+
+        <p>
+            <a href="{{ url_for('search_trains') }}">← Back to train search</a>
+        </p>
+    </main>
+</body>
+</html>

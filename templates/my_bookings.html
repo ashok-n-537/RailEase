@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Bookings | RailEase</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #1f2937;
+            padding: 24px 16px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .booking {
+            background: white;
+            padding: 22px;
+            margin: 18px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px #0000000d;
+            overflow-wrap: anywhere;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 14px;
+            margin: 5px 5px 5px 0;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        .cancel {
+            background: #b91c1c;
+            color: white;
+            padding: 10px 14px;
+            border: 0;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+<main>
+    <p><a href="{{ url_for('dashboard') }}">← Dashboard</a></p>
+
+    <h1>My Bookings</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endwith %}
+
+    {% for booking in bookings %}
+        <section class="booking">
+            <h2>{{ booking["train_name"] }}</h2>
+
+            <p>
+                <strong>Reference:</strong>
+                {{ booking["booking_reference"] }}
+            </p>
+
+            <p>
+                {{ booking["source"] }} →
+                {{ booking["destination"] }}
+            </p>
+
+            <p>Train number: {{ booking["train_number"] }}</p>
+            <p>Journey date: {{ booking["journey_date"] }}</p>
+            <p>Class: {{ booking["class_code"] }}</p>
+            <p>Passengers: {{ booking["passenger_count"] }}</p>
+
+            <p>
+                <strong>Status:</strong>
+                <span class="status">{{ booking["status"] }}</span>
+            </p>
+
+            <a class="button" href="{{ url_for(
+                'download_ticket',
+                booking_reference=booking['booking_reference']
+            ) }}">
+                Download PDF ticket
+            </a>
+
+            {% if booking["status"] == "CONFIRMED" %}
+                <form method="POST"
+                      action="{{ url_for(
+                          'cancel_booking',
+                          booking_reference=booking['booking_reference']
+                      ) }}"
+                      onsubmit="return confirm('Cancel this demo booking?');"
+                      style="display:inline">
+
+                    <input type="hidden" name="csrf_token"
+                           value="{{ csrf_token() }}">
+
+                    <button class="cancel" type="submit">
+                        Cancel booking
+                    </button>
+                </form>
+            {% endif %}
+        </section>
+    {% else %}
+        <section class="booking">
+            <p>You haven't made any bookings yet.</p>
+            <a href="{{ url_for('search_trains') }}">
+                Search for trains
+            </a>
+        </section>
+    {% endfor %}
+</main>
+</body>
+</html>

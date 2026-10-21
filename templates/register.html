@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create Account | RailEase</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #172554;
+        }
+        nav {
+            background: #123b72;
+            padding: 20px 8%;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        main {
+            max-width: 400px;
+            margin: 45px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px #17255412;
+        }
+        label { display: block; margin-top: 16px; }
+        input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 22px;
+            background: #1769e0;
+            color: white;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .message { padding: 10px; background: #fee2e2; border-radius: 8px; }
+        .success { background: #dcfce7; }
+        a { color: #1769e0; }
+    </style>
+</head>
+<body>
+    <nav>🚆 RailEase</nav>
+    <main>
+        <h1>Create your account</h1>
+        <p>Join RailEase to manage your journeys.</p>
+
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <p class="message {{ category }}">{{ message }}</p>
+        {% endfor %}
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text"
+                   maxlength="100" autocomplete="name" required>
+
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email"
+                   maxlength="254" autocomplete="email" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password"
+                   minlength="8" autocomplete="new-password" required>
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        <p>Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+        <a href="{{ url_for('home') }}">Back to homepage</a>
+    </main>
+</body>
+</html>
