@@ -473,9 +473,10 @@ def train_details(train_number):
     with get_db_connection() as connection:
         train = connection.execute("""
             SELECT train_number, name, source, destination,
-                   departure_time, arrival_time
-            FROM trains
-            WHERE train_number = ?
+       departure_time, arrival_time,
+       sleeper_seats, ac3_seats, ac2_seats
+FROM trains
+WHERE train_number = ?
         """, (train_number,)).fetchone()
 
         if train is None:
