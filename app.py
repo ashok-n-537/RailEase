@@ -75,8 +75,10 @@ def get_db_connection():
 
 
 # Create the users table if it doesn't exist
+
 def init_db():
     with get_db_connection() as connection:
+
         # User accounts
         connection.execute("""
             CREATE TABLE IF NOT EXISTS users (
@@ -87,21 +89,22 @@ def init_db():
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
-        # Add the role column to existing databases if needed.
+
+        # Add role column to existing databases
         user_columns = {
-       row["name"]
-    for row in connection.execute(
-        "PRAGMA table_info(users)"
-    ).fetchall()
-}
+            row["name"]
+            for row in connection.execute(
+                "PRAGMA table_info(users)"
+            ).fetchall()
+        }
 
-    if "role" not in user_columns:
-        connection.execute("""
-        ALTER TABLE users
-        ADD COLUMN role TEXT NOT NULL DEFAULT 'user'
-    """)
+        if "role" not in user_columns:
+            connection.execute("""
+                ALTER TABLE users
+                ADD COLUMN role TEXT NOT NULL DEFAULT 'user'
+            """)
 
-        # Sample train information
+        # Train information
         connection.execute("""
             CREATE TABLE IF NOT EXISTS trains (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -113,22 +116,23 @@ def init_db():
                 arrival_time TEXT NOT NULL
             )
         """)
-            # Add seat-capacity columns to existing databases
-    train_columns = {
-        row[1]
-        for row in connection.execute(
-            "PRAGMA table_info(trains)"
-        ).fetchall()
-    }
 
-    for column in ("sleeper_seats", "ac3_seats", "ac2_seats"):
-        if column not in train_columns:
-            connection.execute(
-                f"ALTER TABLE trains ADD COLUMN {column} "
-                "INTEGER NOT NULL DEFAULT 0"
-            )
+        # Safely add missing seat-capacity columns
+        train_columns = {
+            row["name"]
+            for row in connection.execute(
+                "PRAGMA table_info(trains)"
+            ).fetchall()
+        }
 
-        # A separate record for every search by every user
+        for column in ("sleeper_seats", "ac3_seats", "ac2_seats"):
+            if column not in train_columns:
+                connection.execute(
+                    f"ALTER TABLE trains ADD COLUMN {column} "
+                    "INTEGER NOT NULL DEFAULT 0"
+                )
+
+        # Search history
         connection.execute("""
             CREATE TABLE IF NOT EXISTS search_history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -141,13 +145,12 @@ def init_db():
             )
         """)
 
-        # Index for faster retrieval of a user's history
         connection.execute("""
             CREATE INDEX IF NOT EXISTS idx_search_history_user
             ON search_history(user_id, searched_at)
         """)
-        
-        # Simulated seat inventory for each train, date and class
+
+        # Seat inventory by train, date, and class
         connection.execute("""
             CREATE TABLE IF NOT EXISTS seat_availability (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -165,65 +168,28 @@ def init_db():
             )
         """)
 
-
-        # Track seat capacity for each train, date, and class.
+        # Bookings
         connection.execute("""
-            CREATE TABLE IF NOT EXISTS seat_availability (
+            CREATE TABLE IF NOT EXISTS bookings (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                booking_reference TEXT NOT NULL UNIQUE,
+                user_id INTEGER NOT NULL,
                 train_number TEXT NOT NULL,
                 journey_date TEXT NOT NULL,
                 class_code TEXT NOT NULL,
-                total_seats INTEGER NOT NULL,
-                booked_seats INTEGER NOT NULL DEFAULT 0,
-                UNIQUE (train_number, journey_date, class_code),
+                passenger_count INTEGER NOT NULL,
+                passenger_names TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'CONFIRMED',
+                booked_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id),
                 FOREIGN KEY (train_number)
                     REFERENCES trains(train_number),
-                CHECK (total_seats >= 0),
-                CHECK (booked_seats >= 0),
-                CHECK (booked_seats <= total_seats)
+                CHECK (passenger_count BETWEEN 1 AND 6),
+                CHECK (status IN ('CONFIRMED', 'CANCELLED'))
             )
         """)
-        connection.execute("""
-    CREATE TABLE IF NOT EXISTS seat_availability (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        train_number TEXT NOT NULL,
-        journey_date TEXT NOT NULL,
-        class_code TEXT NOT NULL,
-        total_seats INTEGER NOT NULL,
-        booked_seats INTEGER NOT NULL DEFAULT 0,
 
-        UNIQUE (train_number, journey_date, class_code),
-
-        FOREIGN KEY (train_number)
-            REFERENCES trains(train_number),
-
-        CHECK (total_seats >= 0),
-        CHECK (booked_seats >= 0),
-        CHECK (booked_seats <= total_seats)
-    )
-""")  
-        connection.execute("""
-    CREATE TABLE IF NOT EXISTS bookings (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        booking_reference TEXT NOT NULL UNIQUE,
-        user_id INTEGER NOT NULL,
-        train_number TEXT NOT NULL,
-        journey_date TEXT NOT NULL,
-        class_code TEXT NOT NULL,
-        passenger_count INTEGER NOT NULL,
-        passenger_names TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'CONFIRMED',
-        booked_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-        FOREIGN KEY (user_id) REFERENCES users(id),
-        FOREIGN KEY (train_number) REFERENCES trains(train_number),
-
-        CHECK (passenger_count BETWEEN 1 AND 6),
-        CHECK (status IN ('CONFIRMED', 'CANCELLED'))
-    )
-""")
-
-        # Insert demo trains only if no sample trains exist
+        # Insert demo trains only if the table is empty
         train_count = connection.execute(
             "SELECT COUNT(*) FROM trains"
         ).fetchone()[0]
@@ -232,22 +198,16 @@ def init_db():
             sample_trains = [
                 ("12022", "Jan Shatabdi Express",
                  "Durgapur", "Howrah", "06:00", "09:10"),
-
                 ("13012", "Howrah Intercity Express",
                  "Durgapur", "Howrah", "08:30", "11:45"),
-
                 ("12322", "Kolkata Mail",
                  "Howrah", "New Delhi", "19:50", "10:00"),
-
                 ("12382", "Poorva Express",
                  "Howrah", "New Delhi", "08:15", "06:00"),
-
                 ("13011", "Intercity Express",
                  "Howrah", "Durgapur", "17:00", "20:15"),
-
                 ("12361", "Asansol Express",
                  "Durgapur", "Asansol", "10:00", "11:10"),
-
                 ("13019", "Bagh Express",
                  "Howrah", "Patna", "21:45", "09:30"),
             ]
@@ -259,7 +219,6 @@ def init_db():
                 )
                 VALUES (?, ?, ?, ?, ?, ?)
             """, sample_trains)
-
 
 
 # Find a user by their ID when Flask restores a login session
